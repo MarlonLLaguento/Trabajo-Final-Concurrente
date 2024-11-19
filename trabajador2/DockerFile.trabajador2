@@ -1,0 +1,8 @@
+#IMAGEN BASE
+FROM golang:alpine
+#Copiado del fuente a la nueva imagen
+COPY ./nTrabajador2.go ./nTrabajador2.go
+#exponer los puertos
+EXPOSE 9003
+#poner en ejecución el algoritmo
+CMD ["go","run","nTrabajador2.go"]

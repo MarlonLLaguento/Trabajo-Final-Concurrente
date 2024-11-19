@@ -1,0 +1,47 @@
+services:
+  maestro:
+    build:
+      context: ./maestro
+      dockerfile: DockerFile.maestro
+    ports:
+      - "10001:10001"
+    depends_on:
+      - trabajador1
+      - trabajador2
+    networks:
+      - app_network
+
+  trabajador1:
+    build:
+      context: ./trabajador1
+      dockerfile: DockerFile.trabajador1
+    ports:
+      - "20002:9002"
+    volumes:
+      - ./data:/app/data
+    networks:
+      - app_network
+
+  trabajador2:
+    build:
+      context: ./trabajador2
+      dockerfile: DockerFile.trabajador2
+    ports:
+      - "30003:9003"
+    volumes:
+      - ./data:/app/data
+    networks:
+      - app_network
+  frontend:
+    build:
+      context: ./cliente
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:80"  # Cambia el puerto al necesario
+    depends_on:
+      - maestro
+    networks:
+      - app_network
+networks:
+  app_network:
+    driver: bridge
