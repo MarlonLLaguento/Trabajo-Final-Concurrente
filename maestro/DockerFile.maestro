@@ -1,0 +1,25 @@
+# Imagen base de Go
+FROM golang:alpine AS build
+
+WORKDIR /app
+
+# Copia go.mod y go.sum y descarga las dependencias
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copia el resto de los archivos de código
+COPY . .
+
+# Compila el programa
+RUN go build -o maestro nMaestro.go
+
+# Usa una imagen más ligera para la ejecución
+FROM alpine:latest
+WORKDIR /root/
+COPY --from=build /app/maestro .
+
+# Expone el puerto en el que correrá el maestro
+EXPOSE 10001
+
+# Ejecuta el programa compilado
+CMD ["./maestro"]
